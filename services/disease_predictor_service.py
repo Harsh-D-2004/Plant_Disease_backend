@@ -35,15 +35,10 @@ def create_disease_predictor(db: Session, disease_predictor: DiseasePredictorCre
     db_disease_predictor = DiseasePredictor(
         plant_name=disease_predictor.plant_name,
         disease_name=disease_predictor.disease_name,
+        pests = disease_predictor.pests,
         symptoms=disease_predictor.symptoms,
         symptom_description=disease_predictor.symptom_description,
         farmer_id=disease_predictor.farmer_id,
-        Preventive_measures=disease_predictor.Preventive_measures,
-        treatment=disease_predictor.treatment,
-        treatment_description=disease_predictor.treatment,
-        severity=disease_predictor.severity,
-        state=disease_predictor.state,
-        time_to_treatment=disease_predictor.time_to_treatment,
     )
 
     db_factors = get_factors_by_id(db=db, farmers_id=disease_predictor.farmer_id)
@@ -51,6 +46,7 @@ def create_disease_predictor(db: Session, disease_predictor: DiseasePredictorCre
     prompt = f"""
 Plant Name: {db_disease_predictor.plant_name}
 Disease Name: {db_disease_predictor.disease_name}
+Pests : {db_disease_predictor.pests}
 Symptoms: {db_disease_predictor.symptoms}
 location of farmer: {db_factors.city} , {db_factors.state}
 temperature: {db_factors.temperature}
@@ -60,11 +56,11 @@ soil type: {db_factors.soil_type}
 
 Provide a concise solution to treat plant for each of the following factors based on above information:
 1. Preventive Measures: (1-2 lines)
-2. Treatment: (1-2 lines)
-3. Treatment Description: (1-2 lines)
-4. Severity: very high, high, medium, low, very low
-5. State: healthy, sick, dead
-6. Time to treatment: in days or weeks (just give number and unit)
+2. Treatment: (Provide the **exact names** of pesticides, fungicides, or fertilizers available in the market that are effective for this condition.)
+3. Treatment Description: (Describe a practical treatment plan in 3-4 steps, ensuring ease of implementation for farmers.)
+4. Severity: (very high, high, medium, low, very low)
+5. State: (healthy, sick, dead)
+6. Time to treatment: (Provide an estimated treatment duration (e.g., 5 days, 2 weeks) for visible improvements.)
 """
 
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAJsAiNg0ANu12AqWraZWKGCUa8uZ3_njA"

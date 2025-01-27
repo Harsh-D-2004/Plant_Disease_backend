@@ -7,8 +7,10 @@ class DiseasePredictor(Base):
     __tablename__ = "disease_predictors"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, autoincrement=True)
+    # plant_image : 
     plant_name: Mapped[str] = mapped_column(String, index=True)
     disease_name: Mapped[str] = mapped_column(String, index=True)
+    pests : Mapped[str] = mapped_column(String , default="None")
     symptoms: Mapped[list[str]] = mapped_column(JSON)
     symptom_description: Mapped[str] = mapped_column(String , default="No description available")
     farmer_id: Mapped[int] = mapped_column(Integer, ForeignKey("farmers.id", ondelete="CASCADE") , index=True)

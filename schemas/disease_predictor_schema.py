@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 from typing import List
-# from schemas.farmer_schema import FarmerResponse
 
 class DiseasePredictorBase(BaseModel):
     plant_name: str
     disease_name: str
+    pests: str
     symptoms: List[str]
     symptom_description: str
     farmer_id: int
@@ -15,8 +15,13 @@ class DiseasePredictorBase(BaseModel):
     state: str
     time_to_treatment: str
 
-class DiseasePredictorCreate(DiseasePredictorBase):
-    pass
+class DiseasePredictorCreate(BaseModel):
+    plant_name: str
+    disease_name: str
+    pests: str
+    symptoms: List[str]
+    symptom_description: str
+    farmer_id: int
 
 class DiseasePredictorResponse(BaseModel):
     id: int

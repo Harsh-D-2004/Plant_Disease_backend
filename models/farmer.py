@@ -11,5 +11,5 @@ class Farmer(Base):
     crops: Mapped[list[str]] = mapped_column(JSON)
 
 
-    diseased_crops = relationship("DiseasePredictor", back_populates="farmer", cascade="all, delete-orphan")
-    factors = relationship("Factors", back_populates="farmer", cascade="all, delete-orphan", passive_deletes=True)
+    diseased_crops = relationship("DiseasePredictor", back_populates="farmer", cascade="all, delete-orphan" , passive_deletes=True)
+    factors = relationship("Factors", back_populates="farmer", cascade="all, delete-orphan", passive_deletes=True , )
