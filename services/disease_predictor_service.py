@@ -1,3 +1,5 @@
+from pathlib import Path
+from fastapi import UploadFile
 from sqlalchemy.orm import Session
 from models.disease_predictor import DiseasePredictor
 from schemas.disease_predictor_schema import DiseasePredictorCreate
@@ -28,6 +30,9 @@ def get_factors_by_id(db: Session, farmers_id: int):
 
 def create_disease_predictor(db: Session, disease_predictor: DiseasePredictorCreate):
 
+    # filepath = upload_image(image)
+    # print(filepath)
+
     # -----------------------------------------------------------------------------
     # Model logic for detecting plant and disease and symptoms comes here//./.
     # ------------------------------------------------------------------------------
@@ -35,6 +40,7 @@ def create_disease_predictor(db: Session, disease_predictor: DiseasePredictorCre
     db_disease_predictor = DiseasePredictor(
         plant_name=disease_predictor.plant_name,
         disease_name=disease_predictor.disease_name,
+        infected_plant_image=disease_predictor.infected_plant_image,
         pests = disease_predictor.pests,
         symptoms=disease_predictor.symptoms,
         symptom_description=disease_predictor.symptom_description,
@@ -138,3 +144,20 @@ def get_disease_predictor_by_id(db: Session, disease_predictor_id: int):
         raise Exception("Disease Predictor ID is required")
 
     return db_disease_predictor
+
+async def upload_image(image: UploadFile):
+
+    IMAGE_DIR = Path("images")
+    IMAGE_DIR.mkdir(exist_ok=True)
+    
+    file_path = IMAGE_DIR / image.filename
+
+    file_content = await image.read()
+
+    with open(file_path, "wb") as buffer:
+        buffer.write(file_content)
+    
+    print(file_path)
+
+    return file_path
+    

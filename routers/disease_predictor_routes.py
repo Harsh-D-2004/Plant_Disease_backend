@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from services import disease_predictor_service
 from schemas import disease_predictor_schema
@@ -7,7 +7,7 @@ from dependency import get_db
 router = APIRouter(prefix="/disease_predictor", tags=["disease_predictor"])
 
 @router.post("/", response_model=disease_predictor_schema.DiseasePredictorResponse)
-def create_disease_predictor(disease_predictor: disease_predictor_schema.DiseasePredictorCreate, db: Session = Depends(get_db)):
+def create_disease_predictor(disease_predictor: disease_predictor_schema.DiseasePredictorCreate , db: Session = Depends(get_db)):
     db_disease_predictor = disease_predictor_service.create_disease_predictor(db=db, disease_predictor=disease_predictor)
 
     if disease_predictor.plant_name is None:
@@ -26,3 +26,8 @@ def get_disease_predictor_by_id(disease_predictor_id: int, db: Session = Depends
         raise HTTPException(status_code=404, detail="Disease Predictor not found")
     
     return db_disease_predictor
+
+@router.post("/image")
+async def upload_image(image: UploadFile = File(...)):
+    file_path = await disease_predictor_service.upload_image(image=image)
+    return {"file_path": str(file_path)}

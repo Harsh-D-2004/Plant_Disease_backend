@@ -4,6 +4,7 @@ from typing import List
 class DiseasePredictorBase(BaseModel):
     plant_name: str
     disease_name: str
+    infected_plant_image: str
     pests: str
     symptoms: List[str]
     symptom_description: str
@@ -18,6 +19,7 @@ class DiseasePredictorBase(BaseModel):
 class DiseasePredictorCreate(BaseModel):
     plant_name: str
     disease_name: str
+    infected_plant_image: str
     pests: str
     symptoms: List[str]
     symptom_description: str
