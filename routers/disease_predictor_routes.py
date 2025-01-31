@@ -6,16 +6,9 @@ from dependency import get_db
 
 router = APIRouter(prefix="/disease_predictor", tags=["disease_predictor"])
 
-@router.post("/", response_model=disease_predictor_schema.DiseasePredictorResponse)
-def create_disease_predictor(disease_predictor: disease_predictor_schema.DiseasePredictorCreate , db: Session = Depends(get_db)):
-    db_disease_predictor = disease_predictor_service.create_disease_predictor(db=db, disease_predictor=disease_predictor)
-
-    if disease_predictor.plant_name is None:
-        raise HTTPException(status_code=400, detail="Plant name is required")
-    if disease_predictor.disease_name is None:
-        raise HTTPException(status_code=400, detail="Disease name is required")
-    if disease_predictor.symptoms is None:
-        raise HTTPException(status_code=400, detail="Symptoms is required")
+@router.put("/{disease_predictor_id}", response_model=disease_predictor_schema.DiseasePredictorResponse)
+def update_disease_predictor(disease_predictor: disease_predictor_schema.DiseasePredictorCreate , disease_predictor_id: int , db: Session = Depends(get_db)):
+    db_disease_predictor = disease_predictor_service.update_disease_predictor(db=db, disease_predictor=disease_predictor , predictor_id=disease_predictor_id)
     
     return db_disease_predictor
 
@@ -27,7 +20,7 @@ def get_disease_predictor_by_id(disease_predictor_id: int, db: Session = Depends
     
     return db_disease_predictor
 
-@router.post("/image")
-async def upload_image(image: UploadFile = File(...)):
-    file_path = await disease_predictor_service.upload_image(image=image)
-    return {"file_path": str(file_path)}
+@router.post("/image" , response_model=disease_predictor_schema.DiseasePredictorResponse)
+async def upload_image(image: UploadFile = File(...) , db: Session = Depends(get_db) , ):
+    disease_predictor = await disease_predictor_service.upload_image(image=image , db=db)
+    return disease_predictor

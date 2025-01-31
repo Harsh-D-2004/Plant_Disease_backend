@@ -16,10 +16,9 @@ class DiseasePredictor(Base):
     farmer_id: Mapped[int] = mapped_column(Integer, ForeignKey("farmers.id", ondelete="CASCADE") , index=True , nullable=True)
     farmer = relationship("Farmer", back_populates="diseased_crops" , passive_deletes=True)
 
-    Preventive_measures: Mapped[str] = mapped_column(String , default="No preventive measures available" , nullable=True)
-    treatment: Mapped[str] = mapped_column(String , default="No treatment available" , nullable=True)
-    treatment_description: Mapped[str] = mapped_column(String , default="No treatment description available" , nullable=True)
+    Cause_of_disease: Mapped[str] = mapped_column(String , default="No solution available" , nullable=True)
+    Precautions_to_take: Mapped[str] = mapped_column(String , default="No solution available" , nullable=True)
+    Treatment: Mapped[str] = mapped_column(String , default="No solution available" , nullable=True)
     severity: Mapped[str] = mapped_column(String , default="None" , nullable=True)
-    state: Mapped[str] = mapped_column(String , default="None" , nullable=True)
     time_to_treatment: Mapped[str] = mapped_column(String , default="None" , nullable=True)
     
